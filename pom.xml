@@ -51,6 +51,12 @@
             <version>1.6.0.RC1</version>
         </dependency>
 
+        <!-- Spring doc -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.8.0</version>
+        </dependency>
 
         <!-- Jpa -->
         <dependency>
