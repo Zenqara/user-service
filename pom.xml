@@ -51,6 +51,13 @@
             <version>1.6.0.RC1</version>
         </dependency>
 
+        <!-- Mapstruct Processor -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.6.0.RC1</version>
+        </dependency>
+
         <!-- Spring doc -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -63,6 +70,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>3.3.2</version>
+        </dependency>
+
+        <!-- PostgreSQl-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
         </dependency>
 
         <!-- Spring test -->
