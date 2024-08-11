@@ -1,6 +1,7 @@
 package dkcorp.user_service.service.user;
 
-import dkcorp.user_service.dto.UserDto;
+import dkcorp.user_service.dto.user.UserDto;
+import dkcorp.user_service.dto.user.UserModifyDto;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ public interface UserService {
 
     UserDto findById(Long userId);
 
-    UserDto createUser(UserDto userDto);
+    UserDto createUser(UserModifyDto userModifyDto);
 
-    UserDto updateUser(Long userId, UserDto userDto);
+    UserDto updateUser(Long userId, UserModifyDto userModifyDto);
 
     UserDto deactivateUser(Long userId);
 }
