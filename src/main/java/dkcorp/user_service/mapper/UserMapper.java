@@ -1,6 +1,7 @@
 package dkcorp.user_service.mapper;
 
-import dkcorp.user_service.dto.UserDto;
+import dkcorp.user_service.dto.user.UserDto;
+import dkcorp.user_service.dto.user.UserModifyDto;
 import dkcorp.user_service.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -10,11 +11,11 @@ import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface UserMapper {
-    UserDto toDto(User user);
+    UserDto entityToDto(User user);
 
-    User toEntity(UserDto userDto);
+    User modifyDtoToEntity(UserModifyDto userModifyDto);
 
     List<UserDto> toDtoList(List<User> users);
 
-    void updateUserFromDto(UserDto userDto, @MappingTarget User user);
+    void updateUserFromModifyDto(UserModifyDto userModifyDto, @MappingTarget User user);
 }
