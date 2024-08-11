@@ -5,15 +5,13 @@ import dkcorp.user_service.dto.UserDto;
 import java.util.List;
 
 public interface UserService {
-    UserDto createUser(UserDto userDto);
+    List<UserDto> findAll();
 
     UserDto findById(Long userId);
 
-    boolean existsById(Long userId);
-
-    UserDto deactivateUser(Long userId);
-
-    List<UserDto> findAll();
+    UserDto createUser(UserDto userDto);
 
     UserDto updateUser(Long userId, UserDto userDto);
+
+    UserDto deactivateUser(Long userId);
 }
