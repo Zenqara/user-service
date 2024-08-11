@@ -1,6 +1,7 @@
 package dkcorp.user_service.service.user;
 
-import dkcorp.user_service.dto.UserDto;
+import dkcorp.user_service.dto.user.UserDto;
+import dkcorp.user_service.dto.user.UserModifyDto;
 import dkcorp.user_service.entity.User;
 import dkcorp.user_service.exception.EntityNotFoundException;
 import dkcorp.user_service.mapper.UserMapper;
@@ -24,28 +25,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(Long userId) {
-        return userMapper.toDto(findUserById(userId));
+        return userMapper.entityToDto(findUserById(userId));
     }
 
     @Override
-    public UserDto createUser(UserDto userDto) {
-        User newUser = userMapper.toEntity(userDto);
+    public UserDto createUser(UserModifyDto userModifyDto) {
+        User newUser = userMapper.modifyDtoToEntity(userModifyDto);
         newUser.setActive(true);
-        return userMapper.toDto(userRepository.save(newUser));
+        return userMapper.entityToDto(userRepository.save(newUser));
     }
 
     @Override
-    public UserDto updateUser(Long userId, UserDto userDto) {
+    public UserDto updateUser(Long userId, UserModifyDto userModifyDto) {
         User existingUser = findUserById(userId);
-        userMapper.updateUserFromDto(userDto, existingUser);
-        return userMapper.toDto(userRepository.save(existingUser));
+        userMapper.updateUserFromModifyDto(userModifyDto, existingUser);
+        return userMapper.entityToDto(userRepository.save(existingUser));
     }
 
     @Override
     public UserDto deactivateUser(Long userId) {
         User user = findUserById(userId);
         user.setActive(false);
-        return userMapper.toDto(userRepository.save(user));
+        return userMapper.entityToDto(userRepository.save(user));
     }
 
     private User findUserById(Long userId) {
