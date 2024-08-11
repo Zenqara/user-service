@@ -43,10 +43,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto deactivateUser(Long userId) {
+    public void deactivateUser(Long userId) {
         User user = findUserById(userId);
         user.setActive(false);
-        return userMapper.entityToDto(userRepository.save(user));
+        userRepository.save(user);
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.delete(findUserById(userId));
     }
 
     private User findUserById(Long userId) {
