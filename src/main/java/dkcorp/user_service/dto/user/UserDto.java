@@ -21,9 +21,8 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String aboutMe;
-    private String city;
     private LocalDate dateOfBirth;
+    private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean isActive;
 }
