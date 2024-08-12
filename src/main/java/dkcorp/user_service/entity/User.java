@@ -58,6 +58,9 @@ public class User {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
+    @Column(name = "active", nullable = false)
+    private boolean active;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -65,9 +68,6 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive;
 
     // Пользователи, которые подписаны на данного пользователя
     @ManyToMany
