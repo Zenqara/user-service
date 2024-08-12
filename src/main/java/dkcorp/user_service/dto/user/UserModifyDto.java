@@ -44,7 +44,4 @@ public class UserModifyDto {
     @NotBlank(message = "Date of Birth is mandatory. Example: 01-01-1990")
     @Pattern(regexp = "^\\d{2}-\\d{2}-\\d{4}$", message = "Date of Birth must be in the format dd-MM-yyyy. Example: 01-01-1990")
     private LocalDate dateOfBirth;
-
-    @Size(max = 50, message = "City name should not exceed 50 characters. Example: New York")
-    private String city;
 }
