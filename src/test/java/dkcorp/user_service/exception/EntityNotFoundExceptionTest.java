@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EntityNotFoundExceptionTest {
-
     @Test
     void testExceptionMessage() {
         String errorMessage = "Entity not found";
