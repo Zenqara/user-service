@@ -16,7 +16,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserModifyDto {
-
     @NotBlank(message = "Username is mandatory. Example: john_doe")
     @Size(min = 3, max = 30, message = "Username should be between 3 and 30 characters. Example: john_doe")
     private String username;

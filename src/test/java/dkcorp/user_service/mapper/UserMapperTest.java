@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserMapperTest {
-
     private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     @Test
