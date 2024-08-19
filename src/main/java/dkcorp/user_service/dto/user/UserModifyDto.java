@@ -40,6 +40,5 @@ public class UserModifyDto {
     @Size(max = 250, message = "About Me should not exceed 250 characters. Example: I am a software developer with a passion for coding.")
     private String aboutMe;
 
-    @NotBlank(message = "Date of Birth is mandatory. Example: 1990-01-01")
     private LocalDate dateOfBirth;
 }
