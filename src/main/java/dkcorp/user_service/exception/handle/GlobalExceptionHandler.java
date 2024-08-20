@@ -3,6 +3,7 @@ package dkcorp.user_service.exception.handle;
 import dkcorp.user_service.dto.ApiErrorDto;
 import dkcorp.user_service.exception.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -37,5 +38,18 @@ public class GlobalExceptionHandler {
             return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PropertyValueException.class)
+    public ResponseEntity<ApiErrorDto> handleHibernatePropertyValueException(PropertyValueException ex, HttpServletRequest request) {
+        ApiErrorDto apiError = ApiErrorDto.builder()
+                .message(String.format("Field %s cannot be null or empty", ex.getPropertyName()))
+                .field(ex.getPropertyName())
+                .path(request.getRequestURI())
+                .status(HttpStatus.BAD_REQUEST.toString())
+                .timestamp(System.currentTimeMillis())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 }
