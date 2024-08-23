@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -109,6 +110,24 @@ class GlobalExceptionHandlerTest {
         assertEquals(propertyName, response.getBody().getField());
         assertEquals(requestUri, response.getBody().getPath());
         assertEquals(HttpStatus.BAD_REQUEST.toString(), response.getBody().getStatus());
+    }
+
+    @Test
+    void testHandleDataIntegrityViolationException() {
+        String errorMessage = "Unique constraint violation: Username, email, and phone should be unique";
+        String requestUri = "/api/v1/users";
+
+        DataIntegrityViolationException ex = new DataIntegrityViolationException(errorMessage);
+
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn(requestUri);
+
+        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleDataIntegrityViolationException(ex, request);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals(requestUri, response.getBody().getPath());
+        assertEquals(HttpStatus.CONFLICT.toString(), response.getBody().getStatus());
     }
 
     @Test
