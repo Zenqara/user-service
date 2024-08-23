@@ -5,6 +5,7 @@ import dkcorp.user_service.exception.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.PropertyValueException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -53,6 +54,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiErrorDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
+        String message = "Unique constraint violation: Username, email, and phone should be unique";
+        log.error("Data integrity violation: {}", message, ex);
+        ApiErrorDto apiError = createApiErrorDto(
+                message,
+                null,
+                request.getRequestURI(),
+                HttpStatus.CONFLICT
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)
