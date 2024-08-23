@@ -5,7 +5,6 @@ import dkcorp.user_service.exception.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.PropertyValueException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -54,6 +53,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorDto> handleGenericException(Exception ex, HttpServletRequest request) {
+        String message = "An unexpected error occurred. Please try again later.";
+        log.error("Unhandled exception: {}", ex.getMessage(), ex);
+        ApiErrorDto apiError = createApiErrorDto(
+                message,
+                null,
+                request.getRequestURI(),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ApiErrorDto createApiErrorDto(String message, String field, String path, HttpStatus status) {
