@@ -3,6 +3,7 @@ package dkcorp.user_service.exception.handle;
 import dkcorp.user_service.dto.ApiErrorDto;
 import dkcorp.user_service.exception.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,26 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
         assertEquals(fieldName, response.getBody().getField());
+        assertEquals(requestUri, response.getBody().getPath());
+        assertEquals(HttpStatus.BAD_REQUEST.toString(), response.getBody().getStatus());
+    }
+
+    @Test
+    void testHandlePropertyValueException() {
+        String propertyName = "name";
+        String errorMessage = String.format("Field '%s' cannot be null or empty", propertyName);
+        String requestUri = "/api/v1/users";
+
+        PropertyValueException ex = new PropertyValueException(errorMessage, "entityName", propertyName);
+
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn(requestUri);
+
+        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handlePropertyValueException(ex, request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals(propertyName, response.getBody().getField());
         assertEquals(requestUri, response.getBody().getPath());
         assertEquals(HttpStatus.BAD_REQUEST.toString(), response.getBody().getStatus());
     }
