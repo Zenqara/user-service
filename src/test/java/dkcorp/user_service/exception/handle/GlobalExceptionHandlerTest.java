@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -37,7 +38,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleValidationExceptions() {
+    void testHandleValidationExceptions_withFieldError() {
         String fieldName = "username";
         String errorMessage = "Username cannot be empty";
         String requestUri = "/api/v1/users";
@@ -46,8 +47,11 @@ class GlobalExceptionHandlerTest {
         when(fieldError.getDefaultMessage()).thenReturn(errorMessage);
         when(fieldError.getField()).thenReturn(fieldName);
 
+        BindingResult bindingResult = Mockito.mock(BindingResult.class);
+        when(bindingResult.getFieldError()).thenReturn(fieldError);
+
         MethodArgumentNotValidException ex = Mockito.mock(MethodArgumentNotValidException.class);
-        when(ex.getBindingResult().getFieldError()).thenReturn(fieldError);
+        when(ex.getBindingResult()).thenReturn(bindingResult);
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
