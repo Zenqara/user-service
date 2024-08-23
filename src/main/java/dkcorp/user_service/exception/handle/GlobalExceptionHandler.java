@@ -56,32 +56,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiErrorDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
-        String message = "Unique constraint violation: Username, email, and phone should be unique";
-        log.error("Data integrity violation: {}", message, ex);
-        ApiErrorDto apiError = createApiErrorDto(
-                message,
-                null,
-                request.getRequestURI(),
-                HttpStatus.CONFLICT
-        );
-        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorDto> handleGenericException(Exception ex, HttpServletRequest request) {
-        String message = "An unexpected error occurred. Please try again later.";
-        log.error("Unhandled exception: {}", ex.getMessage(), ex);
-        ApiErrorDto apiError = createApiErrorDto(
-                message,
-                null,
-                request.getRequestURI(),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
-        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     private ApiErrorDto createApiErrorDto(String message, String field, String path, HttpStatus status) {
         return ApiErrorDto.builder()
                 .message(message)
