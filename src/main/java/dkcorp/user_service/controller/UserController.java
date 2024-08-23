@@ -31,12 +31,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all users", description = "Returns a list of all users")
     public List<UserDto> findAllUsers() {
         return userService.findAll();
     }
 
     @GetMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Find user by ID", description = "Returns a single user by their ID")
     public UserDto findUserById(@PathVariable @NotNull Long userId) {
         return userService.findById(userId);
