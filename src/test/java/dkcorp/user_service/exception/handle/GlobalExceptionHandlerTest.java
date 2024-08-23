@@ -110,4 +110,22 @@ class GlobalExceptionHandlerTest {
         assertEquals(requestUri, response.getBody().getPath());
         assertEquals(HttpStatus.BAD_REQUEST.toString(), response.getBody().getStatus());
     }
+
+    @Test
+    void testHandleGenericException() {
+        String errorMessage = "An unexpected error occurred. Please try again later.";
+        String requestUri = "/api/v1/users";
+
+        Exception ex = new Exception("Some unexpected error");
+
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn(requestUri);
+
+        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleGenericException(ex, request);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals(requestUri, response.getBody().getPath());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.toString(), response.getBody().getStatus());
+    }
 }
