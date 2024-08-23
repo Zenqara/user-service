@@ -1,11 +1,15 @@
 package dkcorp.user_service.exception.handle;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import dkcorp.user_service.dto.ApiErrorDto;
 import dkcorp.user_service.exception.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.PropertyValueException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,12 @@ import static org.mockito.Mockito.when;
 
 class GlobalExceptionHandlerTest {
     private final GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
+
+    @BeforeEach
+    void setUp() {
+        Logger logger = (Logger) LoggerFactory.getLogger(GlobalExceptionHandler.class);
+        logger.setLevel(Level.OFF);
+    }
 
     @Test
     void testHandleEntityNotFoundException() {
