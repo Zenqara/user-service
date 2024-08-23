@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PropertyValueException.class)
-    public ResponseEntity<ApiErrorDto> handleHibernatePropertyValueException(PropertyValueException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorDto> handlePropertyValueException(PropertyValueException ex, HttpServletRequest request) {
         String message = String.format("Field '%s' cannot be null or empty", ex.getPropertyName());
         log.error("Property value error: {}", message);
         ApiErrorDto apiError = createApiErrorDto(
