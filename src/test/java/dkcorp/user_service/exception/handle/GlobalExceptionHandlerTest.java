@@ -15,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 class GlobalExceptionHandlerTest {
@@ -63,6 +64,31 @@ class GlobalExceptionHandlerTest {
         assertEquals(fieldName, response.getBody().getField());
         assertEquals(requestUri, response.getBody().getPath());
         assertEquals(HttpStatus.BAD_REQUEST.toString(), response.getBody().getStatus());
+    }
+
+    @Test
+    void testHandleValidationExceptions_withoutFieldError() {
+        String requestUri = "/api/v1/users";
+
+        BindingResult bindingResult = Mockito.mock(BindingResult.class);
+        when(bindingResult.getFieldError()).thenReturn(null);
+
+        MethodArgumentNotValidException ex = Mockito.mock(MethodArgumentNotValidException.class);
+        when(ex.getBindingResult()).thenReturn(bindingResult);
+
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn(requestUri);
+
+        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleValidationExceptions(ex, request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        ApiErrorDto apiError = response.getBody();
+        assert apiError != null;
+        assertEquals("Validation error", apiError.getMessage());
+        assertNull(apiError.getField());
+        assertEquals(requestUri, apiError.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST.toString(), apiError.getStatus());
     }
 
     @Test
