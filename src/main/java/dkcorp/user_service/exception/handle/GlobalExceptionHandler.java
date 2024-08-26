@@ -1,7 +1,7 @@
 package dkcorp.user_service.exception.handle;
 
-import dkcorp.user_service.dto.ApiErrorDto;
-import dkcorp.user_service.exception.EntityNotFoundException;
+import dkcorp.user_service.dto.ErrorDto;
+import dkcorp.user_service.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.PropertyValueException;
@@ -16,74 +16,79 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiErrorDto> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorDto> handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
         log.error("Entity not found: {}", ex.getMessage());
-        ApiErrorDto apiError = createApiErrorDto(
+        ErrorDto errorDto = createErrorDto(
                 ex.getMessage(),
                 null,
                 request.getRequestURI(),
                 HttpStatus.NOT_FOUND
         );
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorDto> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
         FieldError fieldError = ex.getBindingResult().getFieldError();
         String message = fieldError != null ? fieldError.getDefaultMessage() : "Validation error";
         String field = fieldError != null ? fieldError.getField() : null;
         log.error("Validation error on field {}: {}", field, message);
-        ApiErrorDto apiError = createApiErrorDto(
+        ErrorDto errorDto = createErrorDto(
                 message,
                 field,
                 request.getRequestURI(),
                 HttpStatus.BAD_REQUEST
         );
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PropertyValueException.class)
-    public ResponseEntity<ApiErrorDto> handlePropertyValueException(PropertyValueException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handlePropertyValueException(PropertyValueException ex, HttpServletRequest request) {
         String message = String.format("Field '%s' cannot be null or empty", ex.getPropertyName());
         log.error("Property value error: {}", message);
-        ApiErrorDto apiError = createApiErrorDto(
+        ErrorDto errorDto = createErrorDto(
                 message,
                 ex.getPropertyName(),
                 request.getRequestURI(),
                 HttpStatus.BAD_REQUEST
         );
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiErrorDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
         String message = "Unique constraint violation: Username, email, and phone should be unique";
         log.error("Data integrity violation: {}", message, ex);
-        ApiErrorDto apiError = createApiErrorDto(
+        ErrorDto errorDto = createErrorDto(
                 message,
                 null,
                 request.getRequestURI(),
                 HttpStatus.CONFLICT
         );
-        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+
+        return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorDto> handleGenericException(Exception ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleGenericException(Exception ex, HttpServletRequest request) {
         String message = "An unexpected error occurred. Please try again later.";
         log.error("Unhandled exception: {}", ex.getMessage(), ex);
-        ApiErrorDto apiError = createApiErrorDto(
+        ErrorDto errorDto = createErrorDto(
                 message,
                 null,
                 request.getRequestURI(),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
-        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ApiErrorDto createApiErrorDto(String message, String field, String path, HttpStatus status) {
-        return ApiErrorDto.builder()
+    private ErrorDto createErrorDto(String message, String field, String path, HttpStatus status) {
+        return ErrorDto.builder()
                 .message(message)
                 .field(field)
                 .path(path)

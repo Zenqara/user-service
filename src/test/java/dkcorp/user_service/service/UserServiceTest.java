@@ -3,7 +3,7 @@ package dkcorp.user_service.service;
 import dkcorp.user_service.dto.user.UserDto;
 import dkcorp.user_service.dto.user.UserModifyDto;
 import dkcorp.user_service.entity.User;
-import dkcorp.user_service.exception.EntityNotFoundException;
+import dkcorp.user_service.exception.NotFoundException;
 import dkcorp.user_service.mapper.UserMapper;
 import dkcorp.user_service.repository.UserRepository;
 import dkcorp.user_service.service.user.UserServiceImpl;
@@ -166,7 +166,7 @@ public class UserServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> userService.deactivateUser(userId));
+        assertThrows(NotFoundException.class, () -> userService.deactivateUser(userId));
 
         verify(userRepository, times(0)).save(any());
     }
@@ -177,7 +177,7 @@ public class UserServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> userService.deleteUser(userId));
+        assertThrows(NotFoundException.class, () -> userService.deleteUser(userId));
 
         verify(userRepository, times(0)).delete(any());
     }

@@ -3,7 +3,7 @@ package dkcorp.user_service.service.user;
 import dkcorp.user_service.dto.user.UserDto;
 import dkcorp.user_service.dto.user.UserModifyDto;
 import dkcorp.user_service.entity.User;
-import dkcorp.user_service.exception.EntityNotFoundException;
+import dkcorp.user_service.exception.NotFoundException;
 import dkcorp.user_service.mapper.UserMapper;
 import dkcorp.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +54,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(String.format("User with id=%d not found", userId)));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("User with id=%d not found", userId)));
     }
 }
