@@ -2,7 +2,7 @@ package dkcorp.user_service.controller;
 
 import dkcorp.user_service.dto.user.UserDto;
 import dkcorp.user_service.dto.user.UserModifyDto;
-import dkcorp.user_service.exception.EntityNotFoundException;
+import dkcorp.user_service.exception.NotFoundException;
 import dkcorp.user_service.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -127,9 +127,9 @@ class UserControllerTest {
     void deactivateUser_shouldThrowExceptionWhenUserNotFound() {
         Long userId = 1L;
 
-        doThrow(new EntityNotFoundException("User not found")).when(userService).deactivateUser(userId);
+        doThrow(new NotFoundException("User not found")).when(userService).deactivateUser(userId);
 
-        assertThrows(EntityNotFoundException.class, () -> userController.deactivateUser(userId));
+        assertThrows(NotFoundException.class, () -> userController.deactivateUser(userId));
 
         verify(userService, times(1)).deactivateUser(userId);
     }
@@ -138,9 +138,9 @@ class UserControllerTest {
     void deleteUser_shouldThrowExceptionWhenUserNotFound() {
         Long userId = 1L;
 
-        doThrow(new EntityNotFoundException("User not found")).when(userService).deleteUser(userId);
+        doThrow(new NotFoundException("User not found")).when(userService).deleteUser(userId);
 
-        assertThrows(EntityNotFoundException.class, () -> userController.deleteUser(userId));
+        assertThrows(NotFoundException.class, () -> userController.deleteUser(userId));
 
         verify(userService, times(1)).deleteUser(userId);
     }

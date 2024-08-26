@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class EntityNotFoundExceptionTest {
+class NotFoundExceptionTest {
     @Test
     void testExceptionMessage() {
         String errorMessage = "Entity not found";
-        EntityNotFoundException exception = new EntityNotFoundException(errorMessage);
+        NotFoundException exception = new NotFoundException(errorMessage);
 
         assertThat(exception.getMessage()).isEqualTo(errorMessage);
     }
@@ -19,8 +19,8 @@ class EntityNotFoundExceptionTest {
         String errorMessage = "Entity not found";
 
         assertThatThrownBy(() -> {
-            throw new EntityNotFoundException(errorMessage);
-        }).isInstanceOf(EntityNotFoundException.class)
+            throw new NotFoundException(errorMessage);
+        }).isInstanceOf(NotFoundException.class)
                 .hasMessage(errorMessage);
     }
 }
