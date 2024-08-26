@@ -2,8 +2,8 @@ package dkcorp.user_service.exception.handle;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import dkcorp.user_service.dto.ApiErrorDto;
-import dkcorp.user_service.exception.EntityNotFoundException;
+import dkcorp.user_service.dto.ErrorDto;
+import dkcorp.user_service.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,15 +33,15 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleEntityNotFoundException() {
+    void testHandleNotFoundException() {
         String errorMessage = "Entity not found";
         String requestUri = "/api/v1/users/1";
-        EntityNotFoundException ex = new EntityNotFoundException(errorMessage);
+        NotFoundException ex = new NotFoundException(errorMessage);
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleEntityNotFoundException(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleNotFoundException(ex, request);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
@@ -68,7 +68,7 @@ class GlobalExceptionHandlerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleValidationExceptions(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleValidationExceptions(ex, request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
@@ -90,16 +90,16 @@ class GlobalExceptionHandlerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleValidationExceptions(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleValidationExceptions(ex, request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
-        ApiErrorDto apiError = response.getBody();
-        assert apiError != null;
-        assertEquals("Validation error", apiError.getMessage());
-        assertNull(apiError.getField());
-        assertEquals(requestUri, apiError.getPath());
-        assertEquals(HttpStatus.BAD_REQUEST.toString(), apiError.getStatus());
+        ErrorDto errorDto = response.getBody();
+        assert errorDto != null;
+        assertEquals("Validation error", errorDto.getMessage());
+        assertNull(errorDto.getField());
+        assertEquals(requestUri, errorDto.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST.toString(), errorDto.getStatus());
     }
 
     @Test
@@ -113,7 +113,7 @@ class GlobalExceptionHandlerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handlePropertyValueException(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handlePropertyValueException(ex, request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
@@ -132,7 +132,7 @@ class GlobalExceptionHandlerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleDataIntegrityViolationException(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleDataIntegrityViolationException(ex, request);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
@@ -150,7 +150,7 @@ class GlobalExceptionHandlerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ApiErrorDto> response = globalExceptionHandler.handleGenericException(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleGenericException(ex, request);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
