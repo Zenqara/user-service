@@ -29,6 +29,6 @@ public class SubscriptionValidatorImpl implements SubscriptionValidator {
     }
 
     private boolean isFollowing(Long followerId, Long followeeId) {
-        return subscriptionRepository.isFollowing(followerId, followeeId);
+        return subscriptionRepository.isSubscribing(followerId, followeeId);
     }
 }
