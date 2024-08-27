@@ -9,4 +9,7 @@ public interface SubscriptionRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "INSERT INTO subscription (follower_user_id, followe_user_id) VALUES (:followerId, :followeeId)", nativeQuery = true)
     void subscribe(Long followerId, Long followeeId);
+
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END FROM subscription WHERE follower_user_id = :followerId AND followee_user_id = :followeeId", nativeQuery = true)
+    boolean isFollowing(Long followerId, Long followeeId);
 }
