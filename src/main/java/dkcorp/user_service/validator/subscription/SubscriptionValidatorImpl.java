@@ -12,19 +12,23 @@ public class SubscriptionValidatorImpl implements SubscriptionValidator {
 
     @Override
     public void validateSubscription(Long followerId, Long followeeId) {
-        isAlreadyFollowing(followerId, followeeId);
-        isSelfFollowing(followerId, followeeId);
-    }
-
-    private void isAlreadyFollowing(Long followerId, Long followeeId) {
-        if (subscriptionRepository.isFollowing(followerId, followeeId)) {
-            throw new DataValidationException(String.format("User with id=%d already following user with id=%d", followerId, followeeId));
-        }
-    }
-
-    private void isSelfFollowing(Long followerId, Long followeeId) {
         if (followerId.equals(followeeId)) {
             throw new DataValidationException("User cannot subscribe to himself");
+        } else if (isFollowing(followerId, followeeId)) {
+            throw new DataValidationException(String.format("User with id=%d is already following user with id=%d", followerId, followeeId));
         }
+    }
+
+    @Override
+    public void validateUnsubscription(Long followerId, Long followeeId) {
+        if (followerId.equals(followeeId)) {
+            throw new DataValidationException("User cannot unsubscribe from himself");
+        } else if (!isFollowing(followerId, followeeId)) {
+            throw new DataValidationException(String.format("User with id=%d cannot unsubscribe from user with id=%d because he is not subscribed", followerId, followeeId));
+        }
+    }
+
+    private boolean isFollowing(Long followerId, Long followeeId) {
+        return subscriptionRepository.isFollowing(followerId, followeeId);
     }
 }
