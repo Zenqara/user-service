@@ -1,4 +1,4 @@
-package dkcorp.user_service.service;
+package dkcorp.user_service.service.user;
 
 import dkcorp.user_service.dto.user.UserDto;
 import dkcorp.user_service.dto.user.UserModifyDto;
@@ -6,7 +6,6 @@ import dkcorp.user_service.entity.User;
 import dkcorp.user_service.exception.NotFoundException;
 import dkcorp.user_service.mapper.UserMapper;
 import dkcorp.user_service.repository.UserRepository;
-import dkcorp.user_service.service.user.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
