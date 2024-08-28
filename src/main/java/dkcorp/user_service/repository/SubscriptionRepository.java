@@ -31,4 +31,7 @@ public interface SubscriptionRepository extends JpaRepository<User, Long> {
             "INNER JOIN subscription f ON u.id = f.followee_user_id " +
             "WHERE f.follower_user_id = :followerId", nativeQuery = true)
     List<User> findFollowsByFollowerId(Long followerId);
+
+    @Query(value = "SELECT COUNT(*) FROM subscription WHERE follower_user_id = :followerId", nativeQuery = true)
+    Long countFollowsByFollowerId(Long followerId);
 }
