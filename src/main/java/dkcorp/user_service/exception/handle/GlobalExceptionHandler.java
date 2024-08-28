@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDto> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         FieldError fieldError = ex.getBindingResult().getFieldError();
         String message = fieldError != null ? fieldError.getDefaultMessage() : "Validation error";
         String field = fieldError != null ? fieldError.getField() : null;

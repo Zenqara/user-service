@@ -50,7 +50,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleValidationExceptions_withFieldError() {
+    void testHandleMethodArgumentNotValidException_withFieldError() {
         String fieldName = "username";
         String errorMessage = "Username cannot be empty";
         String requestUri = "/api/v1/users";
@@ -68,7 +68,7 @@ class GlobalExceptionHandlerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleValidationExceptions(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleMethodArgumentNotValidException(ex, request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
@@ -78,7 +78,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleValidationExceptions_withoutFieldError() {
+    void testHandleMethodArgumentNotValidException_withoutFieldError() {
         String requestUri = "/api/v1/users";
 
         BindingResult bindingResult = Mockito.mock(BindingResult.class);
@@ -90,7 +90,7 @@ class GlobalExceptionHandlerTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn(requestUri);
 
-        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleValidationExceptions(ex, request);
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleMethodArgumentNotValidException(ex, request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
