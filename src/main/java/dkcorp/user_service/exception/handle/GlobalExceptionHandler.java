@@ -1,6 +1,7 @@
 package dkcorp.user_service.exception.handle;
 
 import dkcorp.user_service.dto.ErrorDto;
+import dkcorp.user_service.exception.DataValidationException;
 import dkcorp.user_service.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DataValidationException.class)
+    public ResponseEntity<ErrorDto> handleDataValidationException(DataValidationException ex, HttpServletRequest request) {
+        log.error("Data validation error: {}", ex.getMessage());
+
+        ErrorDto errorDto = createErrorDto(
+                ex.getMessage(),
+                null,
+                request.getRequestURI(),
+                HttpStatus.BAD_REQUEST
+        );
+
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDto> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         FieldError fieldError = ex.getBindingResult().getFieldError();
         String message = fieldError != null ? fieldError.getDefaultMessage() : "Validation error";
         String field = fieldError != null ? fieldError.getField() : null;

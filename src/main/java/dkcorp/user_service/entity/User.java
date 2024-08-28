@@ -69,15 +69,13 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Пользователи, которые подписаны на данного пользователя
     @ManyToMany
     @JoinTable(name = "subscription",
-            joinColumns = @JoinColumn(name = "subscribed_user_id"), // ID пользователя, на которого подписываются
-            inverseJoinColumns = @JoinColumn(name = "subscriber_user_id")  // ID подписчика
+            joinColumns = @JoinColumn(name = "followee_user_id"),  // ID пользователя, на которого подписываются (followee)
+            inverseJoinColumns = @JoinColumn(name = "follower_user_id")  // ID пользователя, который подписывается (follower)
     )
-    private Set<User> subscribers = new HashSet<>();
+    private Set<User> followers = new HashSet<>();  // Пользователи, которые подписаны на данного пользователя (followers)
 
-    // Пользователи, на которых подписан данный пользователь
-    @ManyToMany(mappedBy = "subscribers") // Указывает на то, что это обратная сторона связи
-    private Set<User> subscribedUsers = new HashSet<>();
+    @ManyToMany(mappedBy = "followers")
+    private Set<User> followees = new HashSet<>();  // Пользователи, на которых подписан данный пользователь (followees)
 }
