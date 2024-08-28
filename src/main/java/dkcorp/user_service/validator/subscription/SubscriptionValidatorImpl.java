@@ -8,34 +8,34 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class SubscriptionValidatorImpl implements SubscriptionValidator {
-    private static final String ERROR_SELF_SUBSCRIPTION = "User cannot subscribe to himself";
-    private static final String ERROR_SELF_UNSUBSCRIPTION = "User cannot unsubscribe from himself";
+    private static final String ERROR_SELF_FOLLOW = "User cannot follow himself";
+    private static final String ERROR_SELF_UNFOLLOW = "User cannot unfollow himself";
     private static final String ERROR_ALREADY_FOLLOWING = "User with id=%d is already following user with id=%d";
-    private static final String ERROR_NOT_FOLLOWING = "User with id=%d cannot unsubscribe from user with id=%d because he is not subscribed";
+    private static final String ERROR_NOT_FOLLOWING = "User with id=%d cannot unfollow user with id=%d because he is not following";
 
     private final SubscriptionRepository subscriptionRepository;
 
     @Override
-    public void validateSubscription(Long followerId, Long followeeId) {
-        checkSelfSubscription(followerId, followeeId);
+    public void validateFollow(Long followerId, Long followeeId) {
+        checkSelfFollow(followerId, followeeId);
         checkAlreadyFollowing(followerId, followeeId);
     }
 
     @Override
-    public void validateUnsubscription(Long followerId, Long followeeId) {
-        checkSelfUnsubscription(followerId, followeeId);
+    public void validateUnfollow(Long followerId, Long followeeId) {
+        checkSelfUnfollow(followerId, followeeId);
         checkNotFollowing(followerId, followeeId);
     }
 
-    private void checkSelfSubscription(Long followerId, Long followeeId) {
+    private void checkSelfFollow(Long followerId, Long followeeId) {
         if (followerId.equals(followeeId)) {
-            throw new DataValidationException(ERROR_SELF_SUBSCRIPTION);
+            throw new DataValidationException(ERROR_SELF_FOLLOW);
         }
     }
 
-    private void checkSelfUnsubscription(Long followerId, Long followeeId) {
+    private void checkSelfUnfollow(Long followerId, Long followeeId) {
         if (followerId.equals(followeeId)) {
-            throw new DataValidationException(ERROR_SELF_UNSUBSCRIPTION);
+            throw new DataValidationException(ERROR_SELF_UNFOLLOW);
         }
     }
 
@@ -52,6 +52,6 @@ public class SubscriptionValidatorImpl implements SubscriptionValidator {
     }
 
     private boolean isFollowing(Long followerId, Long followeeId) {
-        return subscriptionRepository.isSubscribing(followerId, followeeId);
+        return subscriptionRepository.isFollowing(followerId, followeeId);
     }
 }
