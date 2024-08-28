@@ -3,6 +3,7 @@ package dkcorp.user_service.exception.handle;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import dkcorp.user_service.dto.ErrorDto;
+import dkcorp.user_service.exception.DataValidationException;
 import dkcorp.user_service.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.PropertyValueException;
@@ -47,6 +48,23 @@ class GlobalExceptionHandlerTest {
         assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
         assertEquals(requestUri, response.getBody().getPath());
         assertEquals(HttpStatus.NOT_FOUND.toString(), response.getBody().getStatus());
+    }
+
+    @Test
+    void testHandleDataValidationException() {
+        String errorMessage = "User cannot follow himself";
+        String requestUri = "/api/v1/subscription/1/follow/1";
+        DataValidationException ex = new DataValidationException(errorMessage);
+
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn(requestUri);
+
+        ResponseEntity<ErrorDto> response = globalExceptionHandler.handleDataValidationException(ex, request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(errorMessage, Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals(requestUri, response.getBody().getPath());
+        assertEquals(HttpStatus.BAD_REQUEST.toString(), response.getBody().getStatus());
     }
 
     @Test
