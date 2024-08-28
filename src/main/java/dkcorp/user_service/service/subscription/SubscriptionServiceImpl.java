@@ -28,7 +28,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public void unfollowUser(Long followerId, Long followeeId) {
-        subscriptionValidator.validateFollow(followerId, followeeId);
+        subscriptionValidator.validateUnfollow(followerId, followeeId);
         subscriptionRepository.unfollow(followerId, followeeId);
     }
 
